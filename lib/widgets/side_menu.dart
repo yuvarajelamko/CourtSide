@@ -16,18 +16,27 @@ class SideMenu extends StatelessWidget {
           color: Colors.black,
           child: SafeArea(
             child: Column(
-              children:  [
+              children: [
                 const InfoCard(name: 'Bentley', fan: 'Warriors Fan'),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    Container(margin: const EdgeInsets.all(10),
-                      child: Expanded(
-                        child: ElevatedButton(onPressed: () {},
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                            ),
-                            child: const Text('Customer Support')),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          const String url = 'https://deriv.com/contact_us/';
+                          if (await launchUrl(Uri.parse(url))) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
+                        ),
+                        child: const Text('Customer Support'),
                       ),
                     ),
                   ],
@@ -37,42 +46,39 @@ class SideMenu extends StatelessWidget {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(10),
-                      child: Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            const String url = 'https://deriv.com/terms-and-conditions/#clients';
-                            launchUrl(url);
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                          ),
-                          child: const Text('Terms and Conditions'),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          const String url =
+                              'https://deriv.com/terms-and-conditions/';
+                          if (await launchUrl(Uri.parse(url))) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
                         ),
+                        child: const Text('Terms and Conditions'),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
-                ElevatedButton(onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                    ),
-                    child: const Text("Log Out"))
-
+                const SizedBox(height: 120),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.red),
+                  ),
+                  child: const Text("Log Out"),
+                )
               ],
             ),
           ),
         ),
       ),
     );
-  }
-}
-
-// Method to launch the URL
-Future<void> launchUrl(String url) async {
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(url);
-  } else {
-    throw 'Could not launch $url';
   }
 }
