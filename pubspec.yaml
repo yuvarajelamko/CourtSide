@@ -40,6 +40,11 @@ dependencies:
   flutter_swiper: ^1.1.6
   carousel_slider: ^4.2.1
   google_fonts: ^4.0.4
+  http: ^0.13.5
+  flutter_bloc: ^8.1.2
+  url_launcher: ^6.1.10
+  in_app_webview: ^0.0.9
+
 
 dev_dependencies:
   flutter_test:
