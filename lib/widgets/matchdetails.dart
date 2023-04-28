@@ -119,22 +119,43 @@ class MyMatchDetails extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: const Color(0xff43F5BF),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Text(
-                  'Bets Page 3',
-                  style: TextStyle(color: Color(0xFF39444E)),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Title'),
+                      content: Text('Your message goes here.'),
+                      actions: [
+                        TextButton(
+                          child: Text('X'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 50,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff43F5BF),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Text(
+                    'Bets Page 3',
+                    style: TextStyle(color: Color(0xFF39444E)),
+                  ),
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
