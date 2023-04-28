@@ -1,116 +1,116 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'firebase_options.dart';
+import 'pages/landingpage.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CourtSide',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        backgroundColor: Colors.red,
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        brightness: Brightness.dark,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+              return Color(0xff000000);
+            }),
+            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((Set<MaterialState> states) {
+              return RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Color(0xff43f5bf), width: 2.0),
+              );
+            }),
+            foregroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+              return Color(0xff43f5bf);
+            }),
+          ),
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+              if (states.contains(MaterialState.focused)) return Color(0xff43f5bf);
+              return Color(0xff000000);
+            }),
+            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((Set<MaterialState> states) {
+              return RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Color(0xff43f5bf), width: 2.0),
+              );
+            }),
+            foregroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+              return Color(0xff43f5bf);
+            }),
+          ),
+        ),
+        primarySwatch: Colors.teal,
+        primaryColor: Color(0xff000000),
+        primaryColorLight: Color(0xff43f5bf),
+        primaryColorDark: Color(0xff43f5bf),
+        canvasColor: Color(0xff000000),
+        scaffoldBackgroundColor: Color(0xff000000),
+        cardColor: Color(0xff343b45),
+        dividerColor: Color(0xff272727),
+        highlightColor: Color(0xff43f5bf),
+        splashColor: Color(0xff43f5bf),
+        secondaryHeaderColor: Color(0xffffffff),
+        textTheme: GoogleFonts.getTextTheme("Roboto", const TextTheme(
+          displayLarge: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          displayMedium: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          displaySmall: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          headlineMedium: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          headlineSmall: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          titleLarge: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          labelSmall: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          titleMedium: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          titleSmall: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          bodyLarge: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          bodyMedium: TextStyle(
+            color: Color(0xffffffff),
+          ),
+          labelLarge: TextStyle(
+            color: Color(0xff43f5bf),
+          ),
+          bodySmall: TextStyle(
+            color: Color(0xff43f5bf),
+          ),
+        )),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      home: const LandingPage(),
     );
   }
 }
