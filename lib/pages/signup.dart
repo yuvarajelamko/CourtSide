@@ -25,7 +25,7 @@ class _SignUpState extends State<SignUp> {
       if (userCredential.user != null) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => HomePage(),
+            builder: (_) => MyHomePage(),
           ),
         );
       }
