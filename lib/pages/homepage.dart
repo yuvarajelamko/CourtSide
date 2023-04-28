@@ -3,22 +3,9 @@ import 'package:courtside/pages/notifications.dart';
 import 'package:courtside/pages/standings.dart';
 import 'package:courtside/widgets/matchdetails.dart';
 import 'package:flutter/material.dart';
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  static const String _title = 'Flutter Code Sample';
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyHomePage(),
-    );
-  }
-}
+import 'package:courtside/pages/landingpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '/widgets/side_menu.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -62,17 +49,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => LandingPage(),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to sign out. Please try again later.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.person),
-          color: Colors.grey,
-          onPressed: () {
-            // handle menu icon press
-          },
-        ),
         backgroundColor: Colors.black,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -93,8 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-        automaticallyImplyLeading: false, // set this to false
       ),
+      drawer : const SideMenu(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -186,6 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _signOut(context),
+        tooltip: 'Sign out',
+        child: const Icon(Icons.logout),
+      ),
       backgroundColor: Colors.black,
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -216,6 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
           unselectedItemColor: Colors.grey,
           onTap: _onItemTapped,
         ),
+
       ),
     );
   }
