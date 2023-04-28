@@ -1,7 +1,6 @@
 import 'package:courtside/pages/bets.dart';
 import 'package:flutter/material.dart';
-
-import '../main.dart';
+import 'homepage.dart';
 import 'notifications.dart';
 
 void main() => runApp(const MyApp());

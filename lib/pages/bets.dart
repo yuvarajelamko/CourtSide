@@ -1,5 +1,5 @@
-import 'package:courtside/main.dart';
 import 'package:flutter/material.dart';
+import 'homepage.dart';
 import 'notifications.dart';
 import 'standings.dart';
 
