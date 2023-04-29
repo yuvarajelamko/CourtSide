@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: const [
             Text(
-              '#name',
+              'Available Balance',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      drawer : const SideMenu(),
+      drawer : SideMenu(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
