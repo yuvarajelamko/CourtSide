@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:courtside/pages/bets.dart';
 import 'package:courtside/pages/notifications.dart';
 import 'package:courtside/pages/standings.dart';
 import 'package:courtside/widgets/matchdetails.dart';
 import 'package:flutter/material.dart';
-import 'package:courtside/pages/landingpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/widgets/side_menu.dart';
+import '/widgets/leaderboard.dart';
+import '/widgets/coinwallet.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -15,6 +18,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late User _user;
+  late String _username = '';
+  late String _email = '';
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -49,52 +55,48 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _signOut(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => LandingPage(),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to sign out. Please try again later.'),
-        ),
-      );
-    }
+  Future<void> _getUserInfo() async {
+    final userData =
+        await FirebaseFirestore.instance.collection('users').doc(_user.email).get();
+    setState(() {
+      _username = userData['username'];
+      _email = _user.email!;
+    });
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser!;
+    _getUserInfo();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            Text(
-              'Available Balance',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
+        actions: [
+          Row(
+            children: [
+              CoinWallet(email: _email),
+              IconButton(
+                icon: const Icon(FontAwesomeIcons.medal),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Leaderboard()),);
+                },
               ),
-            ),
-            Text(
-              '#coin',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
-      drawer : SideMenu(),
+      drawer: SideMenu(username: _username, email: _email),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
+
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,11 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _signOut(context),
-        tooltip: 'Sign out',
-        child: const Icon(Icons.logout),
       ),
       backgroundColor: Colors.black,
       bottomNavigationBar: Theme(
