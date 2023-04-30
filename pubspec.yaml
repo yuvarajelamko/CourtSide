@@ -32,18 +32,25 @@ dependencies:
     sdk: flutter
 
 
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  google_sign_in: ^5.2.1
   firebase_core: ^2.10.0
   firebase_auth: ^4.4.2
   flutter_swiper: ^1.1.6
   carousel_slider: ^4.2.1
   google_fonts: ^4.0.4
+  font_awesome_flutter: ^9.0.0
   http: ^0.13.5
   flutter_bloc: ^8.1.2
   url_launcher: ^6.1.10
   in_app_webview: ^0.0.9
+  firebase_storage: ^11.1.1
+  image_picker: ^0.8.7+4
+  cloud_firestore: ^4.5.3
 
 
 dev_dependencies:
@@ -56,6 +63,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,7 +81,10 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-
+  assets:
+    - assets/landingpage/nba1.jpg
+    - assets/landingpage/nba2.webp
+    - assets/landingpage/nba3.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
@@ -98,3 +110,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
