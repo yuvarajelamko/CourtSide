@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'CourtSide',
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -110,7 +111,7 @@ class MyApp extends StatelessWidget {
           ),
         )),
       ),
-      home: const LandingPage(),
+      home: LandingPage(),
     );
   }
 }

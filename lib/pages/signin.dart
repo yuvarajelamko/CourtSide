@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
 import 'homepage.dart';
 
 class SignIn extends StatefulWidget {
@@ -16,16 +15,44 @@ class _SignInState extends State<SignIn> {
   final _passwordController = TextEditingController();
 
   void _signIn() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email and password.'),
+        ),
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid email.'),
+        ),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password must be at least 6 characters long.'),
+        ),
+      );
+      return;
+    }
+
     try {
-      final userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text);
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email, password: password);
 
       if (userCredential.user != null) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => MyHomePage(),
+            builder: (_) => const MyHomePage(),
           ),
         );
       }
@@ -44,8 +71,9 @@ class _SignInState extends State<SignIn> {
         );
       }
     } catch (e) {
+      print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Failed to sign in. Please try again later.'),
         ),
       );
@@ -63,7 +91,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign in'),
+        title: const Text('Sign in'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -74,7 +102,7 @@ class _SignInState extends State<SignIn> {
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -86,14 +114,15 @@ class _SignInState extends State<SignIn> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a password.';
+
                   }
                   if (value.length < 6) {
                     return 'Password must be at least 6 characters long.';
@@ -101,14 +130,14 @@ class _SignInState extends State<SignIn> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _signIn();
                   }
                 },
-                child: Text('Sign in'),
+                child: const Text('Sign in'),
               ),
             ],
           ),
