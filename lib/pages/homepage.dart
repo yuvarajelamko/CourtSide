@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      drawer : const SideMenu(),
+      drawer: const SideMenu(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -214,13 +214,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: const Color(0xff43F5BF),
+          selectedItemColor: const Color(0xff43f5bf),
           unselectedItemColor: Colors.grey,
           onTap: _onItemTapped,
         ),
-
       ),
     );
   }
 }
-//
