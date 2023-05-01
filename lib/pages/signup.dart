@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
@@ -8,24 +9,74 @@ class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
 }
-final _formKey = GlobalKey<FormState>();
 
 class _SignUpState extends State<SignUp> {
-
+  final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   void _signUp() async {
+    // Check if the entered username is available
+    final isUsernameAvailable = await _isUsernameAvailable(_usernameController.text);
+
+    if (!isUsernameAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('The username is already taken.'),
+        ),
+      );
+      return;
+    }
+
+    // Validate email and password
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email and password.'),
+        ),
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid email.'),
+        ),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password must be at least 6 characters long.'),
+        ),
+      );
+      return;
+    }
+
     try {
       final userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text);
+          email: email, password: password);
 
       if (userCredential.user != null) {
+        // save the username and coins in the database
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.email)
+            .set({
+          'username': _usernameController.text,
+          'balance': 2000,
+        });
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => MyHomePage(),
+            builder: (_) => const MyHomePage(),
           ),
         );
       }
@@ -47,14 +98,27 @@ class _SignUpState extends State<SignUp> {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to create account. Please try again later.'),
+          content: Text(
+              'Failed to create account. Please try again later.'),
         ),
       );
     }
   }
 
+
+
+  Future<bool> _isUsernameAvailable(String username) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    return querySnapshot.docs.isEmpty;
+  }
+
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -73,6 +137,18 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              TextFormField(
+                controller: _usernameController,
+                decoration: const InputDecoration(labelText: 'Username'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a username.';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
