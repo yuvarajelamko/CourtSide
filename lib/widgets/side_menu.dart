@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../pages/landingpage.dart';
 
 class SideMenu extends StatelessWidget {
@@ -38,8 +37,8 @@ class SideMenu extends StatelessWidget {
               accountEmail: Text(email),
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
-                  child: Image.network(
-                    'https://oflutter.com/wp-content/uploads/2021/02/girl-profile.png',
+                  child: Image.asset(
+                    'ssets/sidemenu/profilepic.png',
                     fit: BoxFit.cover,
                     width: 90,
                     height: 90,
@@ -50,7 +49,7 @@ class SideMenu extends StatelessWidget {
                 color: Colors.blue,
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: NetworkImage('https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg'),
+                  image: AssetImage("assets/sidemenu/sidemenu_bg.jpg"),
                 ),
               ),
             ),

@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CourtSide',
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xff000000),
         brightness: Brightness.dark,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -63,7 +64,6 @@ class MyApp extends StatelessWidget {
         primaryColorLight: Color(0xff43f5bf),
         primaryColorDark: Color(0xff43f5bf),
         canvasColor: Color(0xff000000),
-        scaffoldBackgroundColor: Color(0xff000000),
         cardColor: Color(0xff343b45),
         dividerColor: Color(0xff272727),
         highlightColor: Color(0xff43f5bf),
