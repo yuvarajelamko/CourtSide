@@ -30,7 +30,8 @@ class LandingPage extends StatelessWidget {
                     Positioned.fill(
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(10.0),
@@ -67,7 +68,8 @@ class LandingPage extends StatelessWidget {
                     Positioned.fill(
                       child: Center(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(10.0),
@@ -101,10 +103,11 @@ class LandingPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                     Positioned(
+                    Positioned(
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(10.0),
