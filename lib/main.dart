@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
-import 'pages/landingpage.dart';
+import 'widgets/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
               ),
             )),
       ),
-      home: LandingPage(),
+      home: SplashScreen(),
     );
   }
 }
