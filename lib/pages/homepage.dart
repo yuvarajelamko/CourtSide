@@ -6,6 +6,7 @@ import 'package:courtside/widgets/matchdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../widgets/navigation_bar.dart';
 import '/widgets/side_menu.dart';
 import '/widgets/leaderboard.dart';
 import '/widgets/coinwallet.dart';
@@ -21,39 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late User _user;
   late String _username = '';
   late String _email = ' ';
-  int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 1) {
-      // if the second item is tapped
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const MyBets(),
-            transitionDuration: Duration.zero),
-      );
-    } else if (index == 2) {
-      // if the second item is tapped
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const MyStanding(),
-            transitionDuration: Duration.zero),
-        // push the new page onto the stack
-      );
-    } else if (index == 3) {
-      // if the second item is tapped
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-            pageBuilder: (context, anim1, anim2) => const MyNotifications(),
-            transitionDuration: Duration.zero),
-      );
-    }
-  }
 
   Future<void> _getUserInfo() async {
     final userData = await FirebaseFirestore.instance
@@ -76,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         actions: [
           Row(
@@ -587,37 +557,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             )),
       ),
-      backgroundColor: Colors.black,
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: Colors.black,
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.black,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.paid),
-              label: 'Coin',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events),
-              label: 'Trophy',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              label: 'Notification',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: const Color(0xff43f5bf),
-          unselectedItemColor: Colors.grey,
-          onTap: _onItemTapped,
-        ),
-      ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }
