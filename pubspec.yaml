@@ -72,16 +72,30 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
   assets:
     - assets/landingpage/nba1.jpg
     - assets/landingpage/nba2.webp
     - assets/landingpage/nba3.jpg
     - assets/sidemenu/profilepic.png
     - assets/sidemenu/sidemenu_bg.jpg
+    - assets/icon/splash.png
+    - assets/team/ATL.png
+    - assets/team/BKN.png
+    - assets/team/BOS.png
+    - assets/team/CLE.png
+    - assets/team/DEN.png
+    - assets/team/GSW.png
+    - assets/team/LAC.png
+    - assets/team/LAL.png
+    - assets/team/MEM.png
+    - assets/team/MIA.png
+    - assets/team/MIL.png
+    - assets/team/MIN.png
+    - assets/team/NYK.png
+    - assets/team/PHI.png
+    - assets/team/PHX.png
+    - assets/team/SAC.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -38,7 +38,7 @@ class SideMenu extends StatelessWidget {
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
                   child: Image.asset(
-                    'ssets/sidemenu/profilepic.png',
+                    'assets/sidemenu/profilepic.png',
                     fit: BoxFit.cover,
                     width: 90,
                     height: 90,
