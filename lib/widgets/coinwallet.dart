@@ -13,6 +13,12 @@ class CoinWallet extends StatefulWidget {
 class _CoinWalletState extends State<CoinWallet> {
   int _coinBalance = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _getCoinBalance();
+  }
+
   void _getCoinBalance() async {
     final snapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -39,8 +45,6 @@ class _CoinWalletState extends State<CoinWallet> {
 
   @override
   Widget build(BuildContext context) {
-    _getCoinBalance(); // Call the function in build method
-
     return Row(
       children: [
         Text(
