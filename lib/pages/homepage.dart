@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:courtside/pages/bets.dart';
-import 'package:courtside/pages/notifications.dart';
-import 'package:courtside/pages/standings.dart';
 import 'package:courtside/widgets/matchdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,20 +16,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int selectedIndex = 0;
   late User _user;
   late String _username = '';
   late String _email = ' ';
-
 
   Future<void> _getUserInfo() async {
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(_user.email)
         .get();
+    if (mounted) {
     setState(() {
       _username = userData['username'];
       _email = _user.email!;
     });
+    }
   }
 
   @override
@@ -557,7 +556,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             )),
       ),
-      bottomNavigationBar: const MyBottomNavigationBar(),
+      bottomNavigationBar: MyBottomNavigationBar(index: selectedIndex),
     );
   }
 }

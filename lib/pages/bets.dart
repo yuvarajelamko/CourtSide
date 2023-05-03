@@ -13,6 +13,8 @@ class _MyBetsState extends State<MyBets> {
 
   @override
   Widget build(BuildContext context) {
+    int selectedIndex = 1;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Bets'),
@@ -51,7 +53,7 @@ class _MyBetsState extends State<MyBets> {
           ),
         ],
       ),
-      bottomNavigationBar: const MyBottomNavigationBar(),
+      bottomNavigationBar: MyBottomNavigationBar(index: selectedIndex),
     );
   }
 
