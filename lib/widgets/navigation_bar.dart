@@ -33,7 +33,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const MyBets(),
+              pageBuilder: (context, anim1, anim2) => MyBets(),
               transitionDuration: Duration.zero),
         );
         break;
