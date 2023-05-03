@@ -18,7 +18,8 @@ class _SignUpState extends State<SignUp> {
 
   void _signUp() async {
     // Check if the entered username is available
-    final isUsernameAvailable = await _isUsernameAvailable(_usernameController.text);
+    final isUsernameAvailable =
+        await _isUsernameAvailable(_usernameController.text);
 
     if (!isUsernameAvailable) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,8 +63,7 @@ class _SignUpState extends State<SignUp> {
 
     try {
       final userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-          email: email, password: password);
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
         // save the username and coins in the database
@@ -76,7 +76,8 @@ class _SignUpState extends State<SignUp> {
         });
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => const MyHomePage(),
+            builder: (_) => const MyHomePage(
+            ),
           ),
         );
       }
@@ -98,14 +99,11 @@ class _SignUpState extends State<SignUp> {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-              'Failed to create account. Please try again later.'),
+          content: Text('Failed to create account. Please try again later.'),
         ),
       );
     }
   }
-
-
 
   Future<bool> _isUsernameAvailable(String username) async {
     final querySnapshot = await FirebaseFirestore.instance
@@ -147,7 +145,6 @@ class _SignUpState extends State<SignUp> {
                   return null;
                 },
               ),
-
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _emailController,

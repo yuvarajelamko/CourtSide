@@ -19,9 +19,11 @@ class _CoinWalletState extends State<CoinWallet> {
         .doc(widget.email)
         .get();
     if (snapshot.exists) {
+      if (mounted) {
       setState(() {
         _coinBalance = snapshot.data()!['balance'];
       });
+    }
     }
   }
 

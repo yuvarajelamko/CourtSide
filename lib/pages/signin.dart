@@ -46,8 +46,8 @@ class _SignInState extends State<SignIn> {
     }
 
     try {
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email, password: password);
+      final userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
         Navigator.of(context).pushReplacement(
@@ -122,7 +122,6 @@ class _SignInState extends State<SignIn> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a password.';
-
                   }
                   if (value.length < 6) {
                     return 'Password must be at least 6 characters long.';
