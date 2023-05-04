@@ -10,7 +10,7 @@ class GamesList extends StatefulWidget {
 }
 
 class _GamesListState extends State<GamesList> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now().subtract(Duration(days: 1));
 
   @override
   void initState() {

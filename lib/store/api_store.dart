@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart' as intl;
 import 'package:intl/intl.dart';
 
 class Game {
@@ -66,9 +65,8 @@ class ApiStore {
     final year = date.year;
     final month = date.month;
     final day = date.day;
-
-    final url =
-        'http://api.sportradar.us/nba/trial/v8/en/games/$year/$month/$day/schedule.json?api_key=um7myx9x5zs6azanhgeu4raq';
+    final key = '6xa9s4dq6s3n6r382xr86ex6';
+    final url = 'http://api.sportradar.us/nba/trial/v8/en/games/$year/$month/$day/schedule.json?api_key=$key';
 
     final response = await http.get(Uri.parse(url));
 
@@ -82,8 +80,9 @@ class ApiStore {
 
   static Future<Game> getGame(String gameId) async {
     // Build the API URL with the gameId parameter
-    final url =
-        'http://api.sportradar.us/nba/trial/v8/en/games/$gameId/summary.json?api_key=6jrjd2hqdr9pswhuzkbe2vcq';
+
+    final key = '6xa9s4dq6s3n6r382xr86ex6';
+    final url = 'http://api.sportradar.us/nba/trial/v8/en/games/$gameId/summary.json?api_key=$key';
 
     // Make the HTTP GET request
     final response = await http.get(Uri.parse(url));

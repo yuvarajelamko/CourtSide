@@ -1,7 +1,7 @@
+import 'package:courtside/pages/bets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../pages/bets.dart';
 import '../store/api_store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -129,7 +129,7 @@ class _BetButtonState extends State<BetButton> {
   }
 
 
-  Future<void> _awardCoins(double amount) async {
+  void _awardCoins(double amount) async {
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email;
     final userRef = FirebaseFirestore.instance.collection('users').doc(email);
@@ -149,47 +149,22 @@ class _BetButtonState extends State<BetButton> {
   void _confirmHandler() async {
     final updatedGame = await ApiStore.getGame(widget.game.id);
     if (updatedGame.status == 'closed') {
-      final user = FirebaseAuth.instance.currentUser;
-      final email = user?.email;
-      final userRef = FirebaseFirestore.instance.collection('users').doc(email);
-      final betData = await userRef.collection('bets').doc(widget.game.id).get();
-      final bet = betData.data();
-
-      if (bet != null && bet['status'] == 'active') {
-        String? result;
-        if (bet['team'] == updatedGame.homeTeamAlias) {
-          result = updatedGame.homePoints > updatedGame.awayPoints ? 'won' : 'lost';
-        } else if (bet['team'] == updatedGame.awayTeamAlias) {
-          result = updatedGame.awayPoints > updatedGame.homePoints ? 'won' : 'lost';
+      if (updatedGame.homePoints > updatedGame.awayPoints) {
+        if (_selectedTeam == updatedGame.homeTeamAlias) {
+          _awardCoins(_betAmount! * _getOdds(updatedGame.homeTeamSeed));
         }
-
-        if (result != null) {
-          final betRef = userRef.collection('bets').doc(widget.game.id);
-          await betRef.update({'status': result});
-          if (result == 'won') {
-            final winnings = _betAmount! * _getOdds(bet['team_seed']);
-            await _awardCoins(winnings);
-          }
+      } else if (updatedGame.awayPoints > updatedGame.homePoints) {
+        if (_selectedTeam == updatedGame.awayTeamAlias) {
+          _awardCoins(_betAmount! * _getOdds(updatedGame.awayTeamSeed));
         }
+      } else {
+        _awardCoins(_betAmount!);
       }
-      checkWinningsCallback() {
-        _confirmHandler();
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyBets(checkWinningsCallback: checkWinningsCallback),
-        ),
-      );
-
-
-
       setState(() {
         _showConfirmation = false;
       });
     }
   }
-
 
 
 
@@ -213,7 +188,6 @@ class _BetButtonState extends State<BetButton> {
     final homeTeamOdds = _getOdds(widget.game.homeTeamSeed);
     final awayTeamOdds = _getOdds(widget.game.awayTeamSeed);
 
-
     return Column(
       children: [
         ElevatedButton(
@@ -221,12 +195,12 @@ class _BetButtonState extends State<BetButton> {
           child: Text('Bet'),
         ),
         if (_showBetDialog)
-            Dialog(
+          Dialog(
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Place a Bet',
                       style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
@@ -250,49 +224,46 @@ class _BetButtonState extends State<BetButton> {
                     child: Column(
                       children: [
                         Text('Choose a team'),
-                        const SizedBox(height: 8.0),
-                        DropdownButton<String>(
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: widget.game.homeTeamAlias,
-                              child: Text(widget.game.homeTeamAlias),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: widget.game.awayTeamAlias,
-                              child: Text(widget.game.awayTeamAlias),
-                            ),
-                          ],
+                        SizedBox(height: 8.0),
+                        DropdownButton<String>(     items: [
+                          DropdownMenuItem<String>(
+                            value: widget.game.homeTeamAlias,
+                            child: Text(widget.game.homeTeamAlias),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: widget.game.awayTeamAlias,
+                            child: Text(widget.game.awayTeamAlias),
+                          ),
+                        ],
                           onChanged: (value) {
                             setState(() {
                               _selectedTeam = value;
                               _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
                             });
                           },
-                          value: _selectedTeam ?? widget.game.homeTeamAlias, // <-- add default value
+                          value: _selectedTeam,
                           hint: Text('Select a team'),
                         ),
                         SizedBox(height: 8.0),
                         Text('Bet amount'),
                         SizedBox(height: 8.0),
-                        SingleChildScrollView(
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              hintText: 'Enter your bet amount',
-                              prefixIcon: Icon(Icons.attach_money),
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                _betAmount = double.tryParse(value);
-                                _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
-                              });
-                            },
-                          ),
-                        ),
 
+                        SingleChildScrollView(child :    TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your bet amount',
+                            prefixIcon: Icon(Icons.attach_money),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _betAmount = double.tryParse(value);
+                              _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
+                            });
+                          },
+                        ),),
 
                         SizedBox(height: 8.0),
-                        Text(_potentialReturns != null ? 'Potential Returns: ${NumberFormat.currency(locale: 'en_US', symbol: 'C').format(_potentialReturns!)}' : ''),
+                        Text(_potentialReturns != null ? 'Potential Returns: ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(_potentialReturns!)}' : ''),
                         SizedBox(height: 16.0),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -330,13 +301,20 @@ class _BetButtonState extends State<BetButton> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                      'You have placed a bet of ${NumberFormat.currency(locale: 'en_US', symbol: 'C').format(_betAmount!)} on ${_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamAlias : widget.game.awayTeamAlias}'),
+                      'You have placed a bet of ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(_betAmount!)} on ${_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamAlias : widget.game.awayTeamAlias}'),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      _showBetDialog = false;
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyBets(checkWinningsCallback: () {  },),
+                        ),
+                      );
+
                     },
                     child: Text('Confirm'),
                   ),
