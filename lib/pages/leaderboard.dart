@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../widgets/navigation_bar.dart';
 
 class Leaderboard extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class Leaderboard extends StatefulWidget {
 
 class _LeaderboardState extends State<Leaderboard> {
   List<DocumentSnapshot> _leaderboard = [];
+  int selectedIndex = 3;
 
   void _getLeaderboard() async {
     final snapshot = await FirebaseFirestore.instance
@@ -31,8 +33,10 @@ class _LeaderboardState extends State<Leaderboard> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Leaderboards'),
+        automaticallyImplyLeading: false,
       ),
-      body: ListView.builder(
+      body:
+      ListView.builder(
         itemCount: _leaderboard.length,
         itemBuilder: (context, index) {
           final user = _leaderboard[index].data() as Map<String, dynamic>;
@@ -44,6 +48,7 @@ class _LeaderboardState extends State<Leaderboard> {
           );
         },
       ),
+      bottomNavigationBar: MyBottomNavigationBar(index: selectedIndex),
     );
   }
 }

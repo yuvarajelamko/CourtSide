@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../pages/bets.dart';
 import '../store/api_store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-
 
 class BetButton extends StatefulWidget {
   final Game game;
@@ -130,49 +129,70 @@ class _BetButtonState extends State<BetButton> {
   }
 
 
+  Future<void> _awardCoins(double amount) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email;
+    final userRef = FirebaseFirestore.instance.collection('users').doc(email);
 
-
-
-  void _awardCoins(double amount) async {
-      final user = FirebaseAuth.instance.currentUser;
-      final email = user?.email;
-      final userRef = FirebaseFirestore.instance.collection('users').doc(email);
-
-      try {
-        final userData = await userRef.get();
-        final coinWallet = userData['coin_wallet'] ?? 0;
-        final updatedCoinWallet = coinWallet + amount;
-        await userRef.update({'coin_wallet': updatedCoinWallet});
-      } catch (e) {
-        print('Error awarding coins: $e');
-      }
+    try {
+      final userData = await userRef.get();
+      final coinWallet = userData['coin_wallet'] ?? 0;
+      final updatedCoinWallet = coinWallet + amount;
+      await userRef.update({'coin_wallet': updatedCoinWallet});
+    } catch (e) {
+      print('Error awarding coins: $e');
     }
+  }
 
 
 
   void _confirmHandler() async {
     final updatedGame = await ApiStore.getGame(widget.game.id);
     if (updatedGame.status == 'closed') {
-      if (updatedGame.homePoints > updatedGame.awayPoints) {
-        if (_selectedTeam == updatedGame.homeTeamAlias) {
-          _awardCoins(_betAmount! * _getOdds(updatedGame.homeTeamSeed));
+      final user = FirebaseAuth.instance.currentUser;
+      final email = user?.email;
+      final userRef = FirebaseFirestore.instance.collection('users').doc(email);
+      final betData = await userRef.collection('bets').doc(widget.game.id).get();
+      final bet = betData.data();
+
+      if (bet != null && bet['status'] == 'active') {
+        String? result;
+        if (bet['team'] == updatedGame.homeTeamAlias) {
+          result = updatedGame.homePoints > updatedGame.awayPoints ? 'won' : 'lost';
+        } else if (bet['team'] == updatedGame.awayTeamAlias) {
+          result = updatedGame.awayPoints > updatedGame.homePoints ? 'won' : 'lost';
         }
-      } else if (updatedGame.awayPoints > updatedGame.homePoints) {
-        if (_selectedTeam == updatedGame.awayTeamAlias) {
-          _awardCoins(_betAmount! * _getOdds(updatedGame.awayTeamSeed));
+
+        if (result != null) {
+          final betRef = userRef.collection('bets').doc(widget.game.id);
+          await betRef.update({'status': result});
+          if (result == 'won') {
+            final winnings = _betAmount! * _getOdds(bet['team_seed']);
+            await _awardCoins(winnings);
+          }
         }
-      } else {
-        _awardCoins(_betAmount!);
       }
+      checkWinningsCallback() {
+        _confirmHandler();
+      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyBets(checkWinningsCallback: checkWinningsCallback),
+        ),
+      );
+
+
+
       setState(() {
         _showConfirmation = false;
       });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('The game is still in progress. Please wait for the result.'),
-      ));
     }
   }
+
+
+
+
   double _getOdds(int seed) {
     // Determine the probability of winning based on seed
     double probability = 1.0 / seed;
@@ -193,132 +213,138 @@ class _BetButtonState extends State<BetButton> {
     final homeTeamOdds = _getOdds(widget.game.homeTeamSeed);
     final awayTeamOdds = _getOdds(widget.game.awayTeamSeed);
 
+
     return Column(
       children: [
-      ElevatedButton(
-      onPressed: _showBetDialogHandler,
-      child: Text('Bet'),
-    ),
-    if (_showBetDialog)
-    Dialog(
-    child: Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Text(
-    'Place a Bet',
-    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-    ),
-    ),
-    Divider(),
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-    Text(widget.game.homeTeamAlias),
-    Text('vs'),
-    Text(widget.game.awayTeamAlias),
-    ],
-    ),
-    ),
-    Divider(),
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-    children: [
-    Text('Choose a team'),
-    SizedBox(height: 8.0),
-    DropdownButton<String>(     items: [
-    DropdownMenuItem<String>(
-    value: widget.game.homeTeamAlias,
-    child: Text(widget.game.homeTeamAlias),
-    ),
-    DropdownMenuItem<String>(
-    value: widget.game.awayTeamAlias,
-    child: Text(widget.game.awayTeamAlias),
-    ),
-    ],
-    onChanged: (value) {
-    setState(() {
-    _selectedTeam = value;
-    _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
-    });
-    },
-    value: _selectedTeam,
-    hint: Text('Select a team'),
-    ),
-    SizedBox(height: 8.0),
-    Text('Bet amount'),
-    SizedBox(height: 8.0),
+        ElevatedButton(
+          onPressed: _showBetDialogHandler,
+          child: Text('Bet'),
+        ),
+        if (_showBetDialog)
+            Dialog(
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Place a Bet',
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(widget.game.homeTeamAlias),
+                        Text('vs'),
+                        Text(widget.game.awayTeamAlias),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text('Choose a team'),
+                        const SizedBox(height: 8.0),
+                        DropdownButton<String>(
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: widget.game.homeTeamAlias,
+                              child: Text(widget.game.homeTeamAlias),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: widget.game.awayTeamAlias,
+                              child: Text(widget.game.awayTeamAlias),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTeam = value;
+                              _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
+                            });
+                          },
+                          value: _selectedTeam ?? widget.game.homeTeamAlias, // <-- add default value
+                          hint: Text('Select a team'),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text('Bet amount'),
+                        SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your bet amount',
+                              prefixIcon: Icon(Icons.attach_money),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _betAmount = double.tryParse(value);
+                                _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
+                              });
+                            },
+                          ),
+                        ),
 
-    SingleChildScrollView(child :    TextFormField(
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        hintText: 'Enter your bet amount',
-        prefixIcon: Icon(Icons.attach_money),
-      ),
-      onChanged: (value) {
-        setState(() {
-          _betAmount = double.tryParse(value);
-          _potentialReturns = _betAmount! * _getOdds(_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamSeed : widget.game.awayTeamSeed);
-        });
-      },
-    ),),
 
-    SizedBox(height: 8.0),
-    Text(_potentialReturns != null ? 'Potential Returns: ${NumberFormat.currency(locale: 'en_US', symbol: 'C').format(_potentialReturns!)}' : ''),
-    SizedBox(height: 16.0),
-    Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-    ElevatedButton(
-    onPressed: _hideBetDialogHandler,
-    child: Text('Cancel'),
-    ),
-    ElevatedButton(
-    onPressed: _betAmount != null && _selectedTeam != null ? _betHandler : null,
-    child: Text('Bet'),
-    ),
-    ],
-    ),
-    SizedBox(height: 16.0),
-    ],
-    ),
-    ),
-    ]
-    ),
-    ),
-    if (_showConfirmation)
-    Dialog(
-    child: Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Text(
-    'Confirmation',
-    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-    ),
-    ),
-    Divider(),
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Text(
-    'You have placed a bet of ${NumberFormat.currency(locale: 'en_US', symbol: 'C').format(_betAmount!)} on ${_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamAlias : widget.game.awayTeamAlias}'),
-    ),
-    Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: ElevatedButton(
-    onPressed: _confirmHandler,
-    child: Text('Confirm'),
-    ),
-    ),
-    ],
-    ),
-    ),
-    ],
+                        SizedBox(height: 8.0),
+                        Text(_potentialReturns != null ? 'Potential Returns: ${NumberFormat.currency(locale: 'en_US', symbol: 'C').format(_potentialReturns!)}' : ''),
+                        SizedBox(height: 16.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _hideBetDialogHandler,
+                              child: Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: _betAmount != null && _selectedTeam != null ? _betHandler : null,
+                              child: Text('Bet'),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.0),
+                      ],
+                    ),
+                  ),
+                ]
+            ),
+          ),
+        if (_showConfirmation)
+          Dialog(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Confirmation',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                      'You have placed a bet of ${NumberFormat.currency(locale: 'en_US', symbol: 'C').format(_betAmount!)} on ${_selectedTeam == widget.game.homeTeamAlias ? widget.game.homeTeamAlias : widget.game.awayTeamAlias}'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _showBetDialog = false;
+                    },
+                    child: Text('Confirm'),
+                  ),
+                ),
+              ],
+            ),
+          )
+      ],
     );
   }
 }

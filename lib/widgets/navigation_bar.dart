@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/bets.dart';
 import '../pages/homepage.dart';
-import '../pages/notifications.dart';
+import '../pages/leaderboard.dart';
 import '../pages/standings.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
@@ -30,7 +30,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => MyBets(),
+              pageBuilder: (context, anim1, anim2) => MyBets(checkWinningsCallback: () {  },),
               transitionDuration: Duration.zero),
         );
         break;
@@ -46,7 +46,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => const MyNotifications(),
+              pageBuilder: (context, anim1, anim2) => Leaderboard(),
               transitionDuration: Duration.zero),
         );
         break;
@@ -81,10 +81,10 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           label: widget.index == 2 ? 'Standings' : ' ',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.notifications,
+          icon: Icon(Icons.analytics,
               size: widget.index == 3 ? 30 : 25,
               color: widget.index == 3 ? const Color(0xff43F5BF) : Colors.grey),
-          label: widget.index == 3 ? 'Notifications' : ' ',
+          label: widget.index == 3 ? 'Leaderboard' : ' ',
         ),
       ],
       currentIndex: widget.index,
