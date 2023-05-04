@@ -31,7 +31,8 @@ class _MyBetsState extends State<MyBets> {
                 ElevatedButton(
                   onPressed: () => setState(() => _showOngoingBets = true),
                   style: ElevatedButton.styleFrom(
-                    primary: _showOngoingBets ? Colors.blue : null,
+                    backgroundColor:
+                        _showOngoingBets ? const Color(0xff343b45) : null,
                   ),
                   child: const Text('Ongoing Bets'),
                 ),
@@ -39,9 +40,10 @@ class _MyBetsState extends State<MyBets> {
                 ElevatedButton(
                   onPressed: () => setState(() => _showOngoingBets = false),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: !_showOngoingBets ? Colors.blue : null,
+                    backgroundColor:
+                        !_showOngoingBets ? const Color(0xff343b45) : null,
                   ),
-                  child: Text('Past Bets'),
+                  child: const Text('Past Bets'),
                 ),
               ],
             ),
@@ -58,7 +60,7 @@ class _MyBetsState extends State<MyBets> {
   }
 
   Widget _buildOngoingBetsSection() {
-    return Center(
+    return const Center(
       child: Text('Ongoing Bets'),
     );
   }
