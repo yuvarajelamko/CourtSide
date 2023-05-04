@@ -2,7 +2,7 @@ import 'package:courtside/pages/bets.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_bar.dart';
 import 'homepage.dart';
-import 'notifications.dart';
+import 'leaderboard.dart';
 import 'package:courtside/main.dart';
 
 class MyStanding extends StatefulWidget {

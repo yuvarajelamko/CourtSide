@@ -26,7 +26,9 @@ class _GamesListState extends State<GamesList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return SingleChildScrollView(
+    child : Column(
+        children: [
       Padding(
         padding: const EdgeInsets.all(18.0),
         child: Row(
@@ -186,7 +188,9 @@ class _GamesListState extends State<GamesList> {
                               title: Text('Upcoming Matches'),
                             ),
                           SizedBox(
-                            height: scheduledGames?.isEmpty == true ? 0 : 310,
+                            height: scheduledGames?.isEmpty == true
+                                ? 0
+                                : MediaQuery.of(context).size.height * 0.7,
                             child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               itemCount: scheduledGames?.length,
@@ -232,18 +236,7 @@ class _GamesListState extends State<GamesList> {
                                             ],
                                           ),
                                           const SizedBox(width: 20),
-                                          Text(
-                                            '${game.homePoints}',
-                                            style: TextStyle(fontSize: 24),
-                                          ),
-                                          const Text(
-                                            '-',
-                                            style: TextStyle(fontSize: 24),
-                                          ),
-                                          Text(
-                                            '${game.awayPoints}',
-                                            style: TextStyle(fontSize: 24),
-                                          ),
+                                          Text(DateFormat.jm().format(game.scheduled), style: TextStyle(fontSize: 20)),
                                           const SizedBox(width: 20),
                                           Column(
                                             children: [
@@ -284,7 +277,9 @@ class _GamesListState extends State<GamesList> {
                             title: Text('Past Matches'),
                           ),
                           SizedBox(
-                            height: closedGames?.isEmpty == true ? 0 : 310,
+                            height: closedGames?.isEmpty == true
+                                ? 0
+                                : MediaQuery.of(context).size.height * 0.7,
                             child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               itemCount: closedGames?.length,
@@ -369,6 +364,6 @@ class _GamesListState extends State<GamesList> {
               ),
             );
           })
-    ]);
+    ]));
   }
 }
