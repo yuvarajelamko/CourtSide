@@ -58,8 +58,6 @@ class MyMatchDetails extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.all(10.0),
                     const SizedBox(
                       height: 10,
                     ),
@@ -78,7 +76,6 @@ class MyMatchDetails extends StatelessWidget {
                       ),
                     ),
 
-                    // ),
                     const SizedBox(
                       height: 10,
                     ),
