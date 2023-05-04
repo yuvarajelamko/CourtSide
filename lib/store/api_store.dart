@@ -1,41 +1,91 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as intl;
+import 'package:intl/intl.dart';
 
-Future<Game> getData(String dataType) async {
-  //daily schedules: games/:year/:month/:day/schedule.json?api_key= (refer to the API Sandbox);
-  //game summary: games/:game_id/boxscore:format (refer to the API Sandbox);
-  late String gameTitle = '';
-  late String gameStatus = '';
-  late String typeURL;
-  const String apiKey = 'rkcd9u7zu893xzms99pdmxtf';
-  if (dataType == 'dailySchedules') {
-    typeURL = 'games/2023/04/26/schedule.json?api_key=$apiKey';
+class Game {
+  final String id;
+  final String status;
+  final String title;
+  final DateTime scheduled;
+  final int homePoints;
+  final int awayPoints;
+  final String homeTeamName;
+  final String awayTeamName;
+  final String homeTeamAlias;
+  final String awayTeamAlias;
+  final int homeTeamSeed;
+  final int awayTeamSeed;
+
+  Game({
+    required this.id,
+    required this.status,
+    required this.title,
+    required this.scheduled,
+    required this.homePoints,
+    required this.awayPoints,
+    required this.homeTeamName,
+    required this.awayTeamName,
+    required this.homeTeamAlias,
+    required this.awayTeamAlias,
+    required this.homeTeamSeed,
+    required this.awayTeamSeed,
+  });
+
+  factory Game.fromJson(Map<String, dynamic> json) {
+    final scheduledDateTime = DateTime.parse(json['scheduled']);
+    final scheduledMalaysia = scheduledDateTime.toUtc().add(Duration(hours: 8)); // add 8 hours to convert to Malaysia time
+
+    return Game(
+      id: json['id'],
+      status: json['status'],
+      title: json['title'],
+      scheduled: scheduledMalaysia,
+      homePoints: json['home_points'] ?? 0,
+      awayPoints: json['away_points'] ?? 0,
+      homeTeamName: json['home']['name'],
+      awayTeamName: json['away']['name'],
+      homeTeamAlias: json['home']['alias'],
+      awayTeamAlias: json['away']['alias'],
+      homeTeamSeed: json['home']['seed'] ?? 0,
+      awayTeamSeed: json['away']['seed'] ?? 0,
+    );
   }
 
-  String apiUrl = 'http://api.sportradar.us/nba/trial/v8/en/$typeURL';
-
-  var response = await http.get(Uri.parse(apiUrl));
-
-  if (response.statusCode == 200) {
-    final jsonData = jsonDecode(response.body);
-    var games = jsonData['games'];
-
-    for (var game in games) {
-      gameTitle = game['title'];
-      gameStatus = game['status'];
-    }
-
-    Game game = Game(gameTitle, gameStatus);
-    return game;
-  } else {
-    throw Exception("Failed to load");
+  String get scheduledMalaysiaFormatted {
+    final malaysiaDateFormat = DateFormat('EEEE, dd MMMM yyyy, hh:mm a', 'en_MY');
+    return malaysiaDateFormat.format(scheduled);
   }
 }
 
-class Game {
-  late String title = '';
-  late String status = '';
-  Game(this.title, this.status);
+class ApiStore {
+  static Future<List<Game>> getGames(DateTime date) async {
+    final year = date.year;
+    final month = date.month;
+    final day = date.day;
+
+    final url =
+        'http://api.sportradar.us/nba/trial/v8/en/games/$year/$month/$day/schedule.json?api_key=6jrjd2hqdr9pswhuzkbe2vcq';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<Game> games = _parseGamesResponse(response.body);
+      return games;
+    } else {
+      throw Exception('Failed to load games');
+    }
+  }
+
+
+  static List<Game> _parseGamesResponse(String response) {
+    final Map<String, dynamic> data = jsonDecode(response);
+    final List<dynamic>? gamesData = data['games'];
+    if (gamesData == null) {
+      return [];
+    }
+    final List<Game> games = gamesData.map((gameJson) => Game.fromJson(gameJson)).toList();
+    return games;
+  }
+
 }
