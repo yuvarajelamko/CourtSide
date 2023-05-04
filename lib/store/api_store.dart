@@ -34,7 +34,9 @@ class Game {
 
   factory Game.fromJson(Map<String, dynamic> json) {
     final scheduledDateTime = DateTime.parse(json['scheduled']);
-    final scheduledMalaysia = scheduledDateTime.toUtc().add(Duration(hours: 8)); // add 8 hours to convert to Malaysia time
+    final scheduledMalaysia = scheduledDateTime
+        .toUtc()
+        .add(Duration(hours: 8)); // add 8 hours to convert to Malaysia time
 
     return Game(
       id: json['id'],
@@ -53,7 +55,8 @@ class Game {
   }
 
   String get scheduledMalaysiaFormatted {
-    final malaysiaDateFormat = DateFormat('EEEE, dd MMMM yyyy, hh:mm a', 'en_MY');
+    final malaysiaDateFormat =
+        DateFormat('EEEE, dd MMMM yyyy, hh:mm a', 'en_MY');
     return malaysiaDateFormat.format(scheduled);
   }
 }
@@ -65,7 +68,7 @@ class ApiStore {
     final day = date.day;
 
     final url =
-        'http://api.sportradar.us/nba/trial/v8/en/games/$year/$month/$day/schedule.json?api_key=6jrjd2hqdr9pswhuzkbe2vcq';
+        'http://api.sportradar.us/nba/trial/v8/en/games/$year/$month/$day/schedule.json?api_key=um7myx9x5zs6azanhgeu4raq';
 
     final response = await http.get(Uri.parse(url));
 
@@ -77,15 +80,14 @@ class ApiStore {
     }
   }
 
-
   static List<Game> _parseGamesResponse(String response) {
     final Map<String, dynamic> data = jsonDecode(response);
     final List<dynamic>? gamesData = data['games'];
     if (gamesData == null) {
       return [];
     }
-    final List<Game> games = gamesData.map((gameJson) => Game.fromJson(gameJson)).toList();
+    final List<Game> games =
+        gamesData.map((gameJson) => Game.fromJson(gameJson)).toList();
     return games;
   }
-
 }
