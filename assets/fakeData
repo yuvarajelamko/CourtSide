@@ -1,0 +1,118 @@
+{
+"date": "2023-05-05",
+"league": {
+"id": "4353138d-4c22-4396-95d8-5f587d2df25c",
+"name": "NBA",
+"alias": "NBA"
+},
+"games": [
+{
+"id": "acbce66a-269f-4675-b241-985ccab4d2b2",
+"status": "closed",
+"title": "Game 3",
+"coverage": "full",
+"scheduled": "2023-05-05T23:30:00Z",
+"home_points": 121,
+"away_points": 87,
+"track_on_court": true,
+"sr_id": "sr:match:40463189",
+"reference": "0042200213",
+"time_zones": {
+"venue": "US/Eastern",
+"home": "US/Eastern",
+"away": "US/Eastern"
+},
+"venue": {
+"id": "b3dca541-859e-5301-bf90-4ec677a514a9",
+"name": "Wells Fargo Center",
+"capacity": 20478,
+"address": "3601 S. Broad Street",
+"city": "Philadelphia",
+"state": "PA",
+"zip": {},
+"country": "USA",
+"sr_id": "sr:venue:6068",
+"location": {
+"lat": {},
+"lng": {}
+}
+},
+"broadcasts": [
+{
+"network": "ESPN",
+"type": "TV",
+"locale": "National",
+"channel": {}
+}
+],
+"home": {
+"name": "Philadelphia 76ers",
+"alias": "PHI",
+"id": "583ec87d-fb46-11e1-82cb-f4ce4684ea4c",
+"seed": 3,
+"sr_id": "sr:team:3420",
+"reference": {}
+},
+"away": {
+"name": "Boston Celtics",
+"alias": "BOS",
+"id": "583eccfa-fb46-11e1-82cb-f4ce4684ea4c",
+"seed": 2,
+"sr_id": "sr:team:3422",
+"reference": {}
+}
+},
+{
+"id": "471eb2a6-e7a7-469c-a4c0-410a56b459f0",
+"status": "scheduled",
+"title": "Game 3",
+"coverage": "full",
+"scheduled": "2023-05-06T02:00:00Z",
+"track_on_court": true,
+"sr_id": "sr:match:40463275",
+"reference": "0042200223",
+"time_zones": {
+"venue": "US/Arizona",
+"home": "US/Arizona",
+"away": "US/Mountain"
+},
+"venue": {
+"id": "1d2e59b2-2479-5f84-a6a7-e82f65dd8442",
+"name": "Footprint Center",
+"capacity": 18422,
+"address": "201 E. Jefferson Street",
+"city": "Phoenix",
+"state": "AZ",
+"zip": {},
+"country": "USA",
+"sr_id": "sr:venue:6938",
+"location": {
+"lat": {},
+"lng": {}
+}
+},
+"broadcasts": [
+{
+"network": "ESPN",
+"type": "TV",
+"locale": "National",
+"channel": {}
+}
+],
+"home": {
+"name": "Phoenix Suns",
+"alias": "PHX",
+"id": "583ecfa8-fb46-11e1-82cb-f4ce4684ea4c",
+"sr_id": "sr:team:3416",
+"reference": {}
+},
+"away": {
+"name": "Denver Nuggets",
+"alias": "DEN",
+"id": "583ed102-fb46-11e1-82cb-f4ce4684ea4c",
+"sr_id": "sr:team:3417",
+"reference": {}
+}
+}
+]
+}

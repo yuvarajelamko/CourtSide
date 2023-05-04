@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../widgets/navigation_bar.dart';
 import '../widgets/standing_container4.dart';
 import 'homepage.dart';
-import 'notifications.dart';
+import 'leaderboard.dart';
 import 'package:courtside/main.dart';
 import '/widgets/standing_container.dart';
 

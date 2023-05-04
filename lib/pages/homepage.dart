@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/navigation_bar.dart';
 import '/widgets/side_menu.dart';
-import '/widgets/leaderboard.dart';
 import '/widgets/coinwallet.dart';
 import '/store/game_list.dart';
 
@@ -51,15 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             children: [
               CoinWallet(email: _email),
-              IconButton(
-                icon: const Icon(FontAwesomeIcons.medal),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Leaderboard()),
-                  );
-                },
-              ),
             ],
           ),
         ],
