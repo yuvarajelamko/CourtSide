@@ -1,9 +1,13 @@
 import 'package:courtside/pages/bets.dart';
+import 'package:courtside/widgets/standing_container2.dart';
+import 'package:courtside/widgets/standing_container3.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_bar.dart';
+import '../widgets/standing_container4.dart';
 import 'homepage.dart';
 import 'leaderboard.dart';
 import 'package:courtside/main.dart';
+import '/widgets/standing_container.dart';
 
 class MyStanding extends StatefulWidget {
   const MyStanding({Key? key}) : super(key: key);
@@ -20,6 +24,9 @@ class _MyStandingState extends State<MyStanding> {
   static const int SecondColumn = 4;
   static const int ThirdColumn = 2;
   static const int LastColumn = 1;
+
+  final columnTypes = [FirstColumn, SecondColumn, ThirdColumn, LastColumn];
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,112 +109,38 @@ class _MyStandingState extends State<MyStanding> {
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
               child: SingleChildScrollView(
-                child: Row(
-                  children: [
-                    Column(
-                      children: List.generate(FirstColumn, (index) {
-                        return Container(
-                          margin: const EdgeInsets.all(10),
-                          width: 250,
-                          height: 100,
-                          color: Colors.black,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.teal,
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: const Color(0xff343b45),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: List.generate(FirstColumn, (index){
+                            return GamesContainer(numberOfColumn: FirstColumn);
+                          }),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          children: List.generate(SecondColumn, (index){
+                            return const GamesContainer2(numberOfColumn: SecondColumn);
+                          }),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          children: List.generate(ThirdColumn, (index){
+                            return GamesContainer3(numberOfColumn: ThirdColumn);
+                          }),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          children: List.generate(LastColumn, (index){
+                            return GamesContainer4(numberOfColumn: LastColumn);
+                          }),
+                        ),
+
+                      ],
                     ),
-                    const SizedBox(width: 50),
-                    Column(
-                      children: List.generate(SecondColumn, (index) {
-                        return Container(
-                          margin: const EdgeInsets.all(10),
-                          width: 250,
-                          height: 100,
-                          color: Colors.black,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.teal,
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: const Color(0xff343b45),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                    const SizedBox(width: 50),
-                    Column(
-                      children: List.generate(ThirdColumn, (index) {
-                        return Container(
-                          margin: const EdgeInsets.all(10),
-                          width: 250,
-                          height: 100,
-                          color: Colors.black,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.teal,
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: const Color(0xff343b45),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                    const SizedBox(width: 50),
-                    Column(
-                      children: List.generate(LastColumn, (index) {
-                        return Container(
-                          margin: const EdgeInsets.all(10),
-                          width: 250,
-                          height: 100,
-                          color: Colors.black,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.teal,
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: const Color(0xff343b45),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              ),
+              )
+
             ),
-          )
+          ),
         ],
       ),
       bottomNavigationBar: MyBottomNavigationBar(index: selectedIndex),

@@ -96,6 +96,7 @@ flutter:
     - assets/team/PHI.png
     - assets/team/PHX.png
     - assets/team/SAC.png
+    - assets/team/NoAlias.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
