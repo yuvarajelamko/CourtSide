@@ -80,6 +80,23 @@ class ApiStore {
     }
   }
 
+  static Future<Game> getGame(String gameId) async {
+    // Build the API URL with the gameId parameter
+    final url =
+        'http://api.sportradar.us/nba/trial/v8/en/games/$gameId/summary.json?api_key=6jrjd2hqdr9pswhuzkbe2vcq';
+
+    // Make the HTTP GET request
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final Game game = Game.fromJson(data);
+      return game;
+    } else {
+      throw Exception('Failed to load game');
+    }
+  }
+
   static List<Game> _parseGamesResponse(String response) {
     final Map<String, dynamic> data = jsonDecode(response);
     final List<dynamic>? gamesData = data['games'];
