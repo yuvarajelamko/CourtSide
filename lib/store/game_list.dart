@@ -49,6 +49,9 @@ class _GamesListState extends State<GamesList> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
+                if (!snapshot.hasData) {
+                  return Container();
+                }
                 final games = snapshot.data;
                 final ongoingGames = games?.where((game) => game.status == 'inprogress').toList();
                 final scheduledGames = games?.where((game) => game.status == 'scheduled').toList();
@@ -63,7 +66,7 @@ class _GamesListState extends State<GamesList> {
                       title: Text('Live Matches'),
                     ),
                     SizedBox(
-                      height: 150, // set the height as per your requirement
+                      height: ongoingGames?.isEmpty == true ? 0 : 150,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: ongoingGames?.length,
@@ -122,7 +125,7 @@ class _GamesListState extends State<GamesList> {
                       title: Text('Upcoming Matches'),
                     ),
                     SizedBox(
-                      height: 150, // set the height as per your requirement
+                      height: scheduledGames?.isEmpty == true ? 0 : 150,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: scheduledGames?.length,
@@ -181,7 +184,7 @@ class _GamesListState extends State<GamesList> {
                       title: Text('Past Matches'),
                     ),
                     SizedBox(
-                      height: 150, // set the height as per your requirement
+                      height: closedGames?.isEmpty == true ? 0 : 150,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: closedGames?.length,
