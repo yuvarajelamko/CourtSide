@@ -97,6 +97,15 @@ flutter:
     - assets/team/PHX.png
     - assets/team/SAC.png
     - assets/team/NoAlias.png
+    - assets/readMe/bets.jpg
+    - assets/readMe/betting.jpg
+    - assets/readMe/confirm.jpg
+    - assets/readMe/courtSide.mp4
+    - assets/readMe/leaderboard.jpg
+    - assets/readMe/logout.jpg
+    - assets/readMe/past.jpg
+    - assets/readMe/signinsignup.jpg
+    - assets/readMe/upcoming.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
